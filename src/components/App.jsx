@@ -19,6 +19,29 @@ export class App extends Component{
     filter: '',
     
   }
+componentDidUpdate(prevState) {
+//всі зміни зберігаються у локальне сховище
+if( this.state.contacts !== prevState.contacts || this.state.filter !== prevState.filter ){
+localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+localStorage.setItem('filter', JSON.stringify(this.state.filter));
+}}
+
+componentDidMount() {
+  //Зміни зчитуються з локального сховища і записуються у стан.
+  const savedContacts = localStorage.getItem('contacts');
+  const savedFilter = localStorage.getItem('filter');
+  const parsedContacts = JSON.parse(savedContacts);
+  const parsedFilter = JSON.parse(savedFilter);
+
+  if (parsedContacts) {
+    this.setState({contacts:parsedContacts})
+  }
+  
+  if (parsedFilter) {
+    this.setState({filter:parsedFilter})
+  }
+}
+
  addContact = data => {
   const identContactName = this.state.contacts.some(
     ({ name }) => data.name === name
